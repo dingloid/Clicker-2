@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import ohpiestudio.clicker2.R;
 
 
-abstract class BasePowerUp extends AppCompatActivity {
+public class BasePowerUp extends AppCompatActivity {
 
     public PowerUp clicker = new PowerUp("Clicker", 1, 0);
     public PowerUp baker = new PowerUp("Baker", 2, 0);
