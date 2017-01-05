@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Donut Clickers</string>
+    <string name="dps">Donuts per second</string>
+    <string name="donuts">Donuts</string>
+    <string name="banner">ca-app-pub-3274964731359118/3750593785</string>
+    <string name="amount_owned">Owned: </string>
+    <string name="price">Cost</string>
+</resources>
