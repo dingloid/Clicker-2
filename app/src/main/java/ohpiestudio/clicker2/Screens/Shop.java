@@ -1,5 +1,6 @@
-package ohpiestudio.clicker2.Screens;
+package ohpiestudio.clicker2.screens;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +13,11 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.gson.Gson;
 
 
-import ohpiestudio.clicker2.Adapter.CustomAdapter;
-import ohpiestudio.clicker2.Upgrades.BasePowerUp;
+import ohpiestudio.clicker2.adapter.CustomAdapter;
+import ohpiestudio.clicker2.upgrades.BasePowerUp;
 import ohpiestudio.clicker2.R;
 
 
@@ -28,6 +30,7 @@ public class Shop extends BasePowerUp {
     //Variables
     private long donutAmount;
     private long donutPerSecond;
+    Gson gson = new Gson();
 
 
     @Override
@@ -48,24 +51,47 @@ public class Shop extends BasePowerUp {
 
         //BANNER AD
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-3274964731359118~2273860582");
-//
-//
+
         AdView mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest request = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-//                .addTestDevice("5A123D239B16B42078ABB18A091B4B57")  // An example device ID
-//                .build();
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                .addTestDevice("5A123D239B16B42078ABB18A091B4B57")  // An example device ID
+                .build();
+//        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(request);
 
         //Get Intent from Main Activity
         Intent getValue = this.getIntent();
         donutAmount = getValue.getLongExtra("donutAmount", donutAmount);
         donutPerSecond = getValue.getLongExtra("donutPerSecond", donutPerSecond);
 
+        //Init prefs
+        savedClicker = getPreferences(Context.MODE_PRIVATE);
+        savedBaker = getPreferences(Context.MODE_PRIVATE);
+        savedFlourSack = getPreferences(Context.MODE_PRIVATE);
+        savedCloner = getPreferences(Context.MODE_PRIVATE);
+        savedMine = getPreferences(Context.MODE_PRIVATE);
+        savedFactory = getPreferences(Context.MODE_PRIVATE);
+        savedShrine = getPreferences(Context.MODE_PRIVATE);
+        savedShipment = getPreferences(Context.MODE_PRIVATE);
+        savedPortal = getPreferences(Context.MODE_PRIVATE);
+        savedTimeMachine = getPreferences(Context.MODE_PRIVATE);
+        savedClickerOwned = getPreferences(Context.MODE_PRIVATE);
+        savedBakerOwned = getPreferences(Context.MODE_PRIVATE);
+        savedFlourSackOwned = getPreferences(Context.MODE_PRIVATE);
+        savedClonerOwned = getPreferences(Context.MODE_PRIVATE);
+        savedMineOwned = getPreferences(Context.MODE_PRIVATE);
+        savedFactoryOwned = getPreferences(Context.MODE_PRIVATE);
+        savedShrineOwned = getPreferences(Context.MODE_PRIVATE);
+        savedShipmentOwned = getPreferences(Context.MODE_PRIVATE);
+        savedPortalOwned = getPreferences(Context.MODE_PRIVATE);
+        savedTimeMachineOwned = getPreferences(Context.MODE_PRIVATE);
+
+
+
         //Update Text Fields with donut amount
         setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
-        setDountPerSecondText(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
+        setDonutPerSecondText(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
 
         //Init List View
         final ListView listView = (ListView) findViewById(R.id.listView);
@@ -84,6 +110,7 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - clicker.getPrice();
                             donutPerSecond = donutPerSecond + 1;
                             clicker.increasePrice();
+                            saveAll(savedClicker, savedClickerOwned, "savedClickerPrice", "savedClickerOwned");
                         }
                         break;
                     }
@@ -173,7 +200,7 @@ public class Shop extends BasePowerUp {
                         break;
                 }
                 setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
-                setDountPerSecondText(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
+                setDonutPerSecondText(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
                 customAdapter.notifyDataSetChanged();
             }
         });
@@ -181,24 +208,43 @@ public class Shop extends BasePowerUp {
 
     @Override
     public void onBackPressed(){
+
         //Send values back to main activity
         Intent sendValues = new Intent();
         sendValues.putExtra("updateDonutAmount", donutAmount);
         sendValues.putExtra("updateDonutPerSecond", donutPerSecond);
         setResult(RESULT_OK, sendValues);
-        finish();
+        finishActivity(1);
+        super.onBackPressed();
     }//End onBackPressed
 
     @Override
     protected void onPause(){
         super.onPause();
+        //Save all values of upgrades owned
+
+        saveAll(savedBaker, savedBakerOwned, "savedBakerPrice", "savedBakerOwned");
+        saveAll(savedFlourSack, savedFlourSackOwned, "savedFlourSackPrice", "savedFlourSackOwned");
+        saveAll(savedCloner, savedClonerOwned, "savedClonerPrice", "savedClonerOwned");
+        saveAll(savedMine, savedMineOwned, "savedMinePrice", "savedMineOwned");
+        saveAll(savedFactory, savedFactoryOwned, "savedFactoryPrice", "savedFactoryOwned");
+        saveAll(savedShrine, savedShrineOwned, "savedShrinePrice", "savedShrineOwned");
+        saveAll(savedShipment, savedShipmentOwned, "savedShipmentPrice", "savedShipmentOwned");
+        saveAll(savedPortal, savedPortalOwned, "savedPortalPrice", "savedPortalOwned");
+        saveAll(savedTimeMachine, savedTimeMachineOwned, "saveTimeMachinePrice", "savedTimeMachineOwned");
     }//End onPause
+
+
 
     public void setDonutAmountText(String output){
         donutAmountText.setText(output);
     }
 
-    public void setDountPerSecondText(String output){
+    public void setDonutPerSecondText(String output){
         donutPerSecondText.setText(output);
     }
+
+
+
+
 }

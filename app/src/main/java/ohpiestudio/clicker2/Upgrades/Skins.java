@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.Upgrades;
+package ohpiestudio.clicker2.upgrades;
 
 public class Skins extends PowerUp{
 

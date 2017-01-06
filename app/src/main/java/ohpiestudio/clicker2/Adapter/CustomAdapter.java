@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.Adapter;
+package ohpiestudio.clicker2.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 
 import ohpiestudio.clicker2.R;
-import ohpiestudio.clicker2.Upgrades.PowerUp;
+import ohpiestudio.clicker2.upgrades.PowerUp;
 
 public class CustomAdapter extends BaseAdapter{
 

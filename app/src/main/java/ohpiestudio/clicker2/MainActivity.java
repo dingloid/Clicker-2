@@ -13,12 +13,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.Locale;
-import ohpiestudio.clicker2.Screens.Shop;
-
-import static java.lang.Double.doubleToLongBits;
-import static java.lang.Double.longBitsToDouble;
-
+import ohpiestudio.clicker2.screens.Shop;
 
 public class MainActivity extends AppCompatActivity {
     //Variables
@@ -46,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         donutAmount = savedAmount.getLong("donutAmount", donutAmount);
         donutPerSecond = savedDPS.getLong("donutPerSecond", donutPerSecond);
-
-    }
+    }//End onCreate
 
     @Override
     protected void onStart(){
@@ -78,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 timer.start();
             }
         }.start();
-
 
         //Click Event for Donut Image
         donut.setOnTouchListener(new View.OnTouchListener(){
@@ -115,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
-                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
     }//End onStart
@@ -126,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         //Save Values
         savedAmount.edit().putLong("donutAmount", donutAmount).apply();
         savedDPS.edit().putLong("donutPerSecond", donutPerSecond).apply();
+        timer.cancel();
     }//End onPause
 
     @Override
@@ -133,16 +127,22 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == INT_CODE){
             if(resultCode == RESULT_OK){
-                donutAmount = data.getLongExtra("updateDonutAmount", donutAmount);
-                donutPerSecond = data.getLongExtra("updateDonutPerSecond", donutPerSecond);
+                donutAmount = data.getLongExtra("updateDonutAmount", 0);
+                donutPerSecond = data.getLongExtra("updateDonutPerSecond", 0);
 
-                setDonutAmount(String.valueOf( donutAmount += clickPower) + " " + getString(R.string.donuts));
+                setDonutAmount(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
                 setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
                 //Restart Donut per second
                 timer.start();
             }
         }
     }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        timer.cancel();
+    }//End onStop
 
     public void setDonutAmount(String donutAmount){
         donutAmountText.setText(donutAmount);
