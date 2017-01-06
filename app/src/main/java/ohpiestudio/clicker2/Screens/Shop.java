@@ -7,20 +7,18 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 
-import java.util.Locale;
-
 import ohpiestudio.clicker2.Adapter.CustomAdapter;
 import ohpiestudio.clicker2.Upgrades.BasePowerUp;
 import ohpiestudio.clicker2.R;
 
-import static android.widget.Toast.makeText;
+
 
 public class Shop extends BasePowerUp {
     //UI
@@ -30,6 +28,7 @@ public class Shop extends BasePowerUp {
     //Variables
     private long donutAmount;
     private long donutPerSecond;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +84,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - clicker.getPrice();
                             donutPerSecond = donutPerSecond + 1;
                             clicker.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -96,8 +93,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - baker.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             baker.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -107,8 +102,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - flourSack.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             flourSack.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -118,8 +111,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - mine.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             mine.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -129,8 +120,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - cloner.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             cloner.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -140,8 +129,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - factory.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             factory.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -151,8 +138,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - shrine.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             shrine.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -163,8 +148,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - shipment.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             shipment.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -174,8 +157,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - portal.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             portal.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
@@ -185,8 +166,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - timeMachine.getPrice();
                             donutPerSecond = donutPerSecond + 4;
                             timeMachine.increasePrice();
-                        } else {
-                            makeText(getApplicationContext(),"Not Enough Donuts", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     }
