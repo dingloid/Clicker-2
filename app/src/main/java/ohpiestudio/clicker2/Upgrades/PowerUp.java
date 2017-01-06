@@ -5,7 +5,6 @@ public class PowerUp {
 
     private String name;
     private long price;
-    private long baseCost;
     private long amountOwned;
 
     public PowerUp(){
@@ -35,7 +34,7 @@ public class PowerUp {
     }
 
     public void increasePrice(){
-
+        setPrice((long) Math.ceil(getPrice() * 1.15));
     }
 
     public String getName(){

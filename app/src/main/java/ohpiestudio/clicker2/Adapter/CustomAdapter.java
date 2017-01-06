@@ -17,6 +17,7 @@ public class CustomAdapter extends BaseAdapter{
     private int icons[];
     private PowerUp powerUpArray[];
     private static LayoutInflater inflater;
+    private String ownedText;
 
     public CustomAdapter(Context context, int images[], PowerUp array[] ){
         icons = images;
@@ -57,7 +58,8 @@ public class CustomAdapter extends BaseAdapter{
             price = (TextView) v.findViewById(R.id.powerUpCost);
             //Populate Text
             price.setText(String.valueOf(powerUpArray[i].getPrice()));
-            amountOwned.setText(String.valueOf(powerUpArray[i].getAmountOwned()));
+            ownedText = "Owned:" + " " + String.valueOf(powerUpArray[i].getAmountOwned());
+            amountOwned.setText(ownedText);
             title.setText(powerUpArray[i].getName());
             thumbnails.setImageResource(icons[i]);
 
@@ -72,7 +74,8 @@ public class CustomAdapter extends BaseAdapter{
             price = (TextView) v.findViewById(R.id.powerUpCost);
             //Populate Text
             price.setText(String.valueOf(powerUpArray[i].getPrice()));
-            amountOwned.setText(String.valueOf(powerUpArray[i].getAmountOwned()));
+            ownedText = "Owned:" + " " + String.valueOf(powerUpArray[i].getAmountOwned());
+            amountOwned.setText(ownedText);
             title.setText(powerUpArray[i].getName());
             thumbnails.setImageResource(icons[i]);
 

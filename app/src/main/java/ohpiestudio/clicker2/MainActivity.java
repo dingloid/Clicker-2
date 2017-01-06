@@ -1,5 +1,6 @@
 package ohpiestudio.clicker2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
@@ -15,12 +16,15 @@ import android.widget.TextView;
 import java.util.Locale;
 import ohpiestudio.clicker2.Screens.Shop;
 
+import static java.lang.Double.doubleToLongBits;
+import static java.lang.Double.longBitsToDouble;
+
 
 public class MainActivity extends AppCompatActivity {
     //Variables
-    private double donutAmount = 0.0;
-    private double clickPower = 1.0;
-    private double donutPerSecond = 0.1;
+    private long donutAmount = 0;
+    private double clickPower = Math.round(donutAmount * 0.02);
+    private long donutPerSecond = 1;
     //GUI Widgets
     private TextView donutAmountText;
     private TextView donutPerSecondText;
@@ -29,12 +33,20 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer timer;
     SharedPreferences savedAmount;
     SharedPreferences savedDPS;
+    static final int INT_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        //Load Values
+        savedAmount = getPreferences(Context.MODE_PRIVATE);
+        savedDPS = getPreferences(Context.MODE_PRIVATE);
+
+        donutAmount = savedAmount.getLong("donutAmount", donutAmount);
+        donutPerSecond = savedDPS.getLong("donutPerSecond", donutPerSecond);
+
     }
 
     @Override
@@ -46,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Button toShop = (Button) findViewById(R.id.button);
 
         //Load Values
-        setDonutPerSecond(String.format(Locale.getDefault(), "%.1f", donutPerSecond) + " " + getString(R.string.dps));
+        setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
 
         //Donuts Per Second Loop
         timer = new CountDownTimer(1000, 1000) {
@@ -62,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             private void startLoop() {
-                setDonutAmount(String.format(Locale.getDefault(), "%.1f", donutAmount = donutAmount + donutPerSecond) + " " + getString(R.string.donuts));
+                setDonutAmount(String.valueOf(donutAmount = donutAmount + donutPerSecond) + " " + getString(R.string.donuts));
                 timer.start();
             }
         }.start();
@@ -80,7 +92,12 @@ public class MainActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_DOWN ){
                     v.setScaleX(scaleClick);
                     v.setScaleY(scaleClick);
-                    setDonutAmount(String.format(Locale.getDefault(), "%.1f", donutAmount += clickPower) + " " + getString(R.string.donuts));
+                    if(clickPower < 1) {
+                        setDonutAmount(String.valueOf(donutAmount += 1) + " " + getString(R.string.donuts));
+
+                    } else {
+                        setDonutAmount(String.valueOf(donutAmount += clickPower) + " " + getString(R.string.donuts));
+                    }
                     return true;
                 }
                 else if(event.getAction() == MotionEvent.ACTION_UP){
@@ -91,14 +108,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });//End of Click Event
 
-
-
         toShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), Shop.class);
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
+                timer.cancel();
                 startActivity(i);
             }
         });
@@ -107,7 +123,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
+        //Save Values
+        savedAmount.edit().putLong("donutAmount", donutAmount).apply();
+        savedDPS.edit().putLong("donutPerSecond", donutPerSecond).apply();
     }//End onPause
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == INT_CODE){
+            if(resultCode == RESULT_OK){
+                donutAmount = data.getLongExtra("updateDonutAmount", donutAmount);
+                donutPerSecond = data.getLongExtra("updateDonutPerSecond", donutPerSecond);
+
+                setDonutAmount(String.valueOf( donutAmount += clickPower) + " " + getString(R.string.donuts));
+                setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
+                //Restart Donut per second
+                timer.start();
+            }
+        }
+    }
 
     public void setDonutAmount(String donutAmount){
         donutAmountText.setText(donutAmount);
@@ -116,4 +151,5 @@ public class MainActivity extends AppCompatActivity {
     public void setDonutPerSecond(String dps){
         donutPerSecondText.setText(dps);
     }
+
 }//End
