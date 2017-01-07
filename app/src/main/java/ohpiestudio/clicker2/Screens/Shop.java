@@ -2,6 +2,7 @@ package ohpiestudio.clicker2.screens;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -19,7 +20,7 @@ import com.google.gson.Gson;
 import ohpiestudio.clicker2.adapter.CustomAdapter;
 import ohpiestudio.clicker2.upgrades.BasePowerUp;
 import ohpiestudio.clicker2.R;
-
+import ohpiestudio.clicker2.upgrades.PowerUp;
 
 
 public class Shop extends BasePowerUp {
@@ -30,7 +31,34 @@ public class Shop extends BasePowerUp {
     //Variables
     private long donutAmount;
     private long donutPerSecond;
-    Gson gson = new Gson();
+
+    //Shared Prefs
+    public SharedPreferences savedClicker;
+    public SharedPreferences savedBaker;
+    public SharedPreferences savedFlourSack;
+    public SharedPreferences savedMine;
+    public SharedPreferences savedCloner;
+    public SharedPreferences savedFactory;
+    public SharedPreferences savedShrine;
+    public SharedPreferences savedShipment;
+    public SharedPreferences savedPortal;
+    public SharedPreferences savedTimeMachine;
+
+    public PowerUp clicker;
+    public PowerUp baker;
+    public PowerUp flourSack;
+    public PowerUp mine;
+    public PowerUp cloner;
+    public PowerUp factory;
+    public PowerUp shrine;
+    public PowerUp shipment;
+    public PowerUp portal;
+    public PowerUp timeMachine;
+
+    PowerUp powerUpArray[];
+
+    Gson g;
+
 
 
     @Override
@@ -43,11 +71,14 @@ public class Shop extends BasePowerUp {
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
 
 
+
+
     }//End onCreate
 
     @Override
     protected void onStart(){
         super.onStart();
+        g = new Gson();
 
         //BANNER AD
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-3274964731359118~2273860582");
@@ -76,16 +107,38 @@ public class Shop extends BasePowerUp {
         savedShipment = getPreferences(Context.MODE_PRIVATE);
         savedPortal = getPreferences(Context.MODE_PRIVATE);
         savedTimeMachine = getPreferences(Context.MODE_PRIVATE);
-        savedClickerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedBakerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedFlourSackOwned = getPreferences(Context.MODE_PRIVATE);
-        savedClonerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedMineOwned = getPreferences(Context.MODE_PRIVATE);
-        savedFactoryOwned = getPreferences(Context.MODE_PRIVATE);
-        savedShrineOwned = getPreferences(Context.MODE_PRIVATE);
-        savedShipmentOwned = getPreferences(Context.MODE_PRIVATE);
-        savedPortalOwned = getPreferences(Context.MODE_PRIVATE);
-        savedTimeMachineOwned = getPreferences(Context.MODE_PRIVATE);
+
+        String temp = savedClicker.getString("savedClicker", "");
+        powerUpArray = g.fromJson( temp , PowerUp[].class);
+
+        //Declare Objects or something
+
+    if(powerUpArray == null){
+
+        baker = new PowerUp("Baker", 2, 0);
+        flourSack = new PowerUp("Flour Sack", 3, 0);
+        mine = new PowerUp("Mine", 4, 0);
+        cloner = new PowerUp("Cloner", 5, 0);
+        factory = new PowerUp("Factory", 6, 0);
+        shrine = new PowerUp("Shrine", 7, 0);
+        shipment = new PowerUp("Shipment", 8, 0);
+        portal = new PowerUp("Portal", 9, 0);
+        timeMachine = new PowerUp("Time Machine", 10, 0);
+
+        //Power Up Array
+        powerUpArray = new PowerUp[]{
+                clicker,
+                baker,
+                flourSack,
+                mine,
+                cloner,
+                factory,
+                shrine,
+                //shipment,
+                portal,
+                timeMachine
+        };
+    }
 
 
 
@@ -110,7 +163,6 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - clicker.getPrice();
                             donutPerSecond = donutPerSecond + 1;
                             clicker.increasePrice();
-                            saveAll(savedClicker, savedClickerOwned, "savedClickerPrice", "savedClickerOwned");
                         }
                         break;
                     }
@@ -222,16 +274,16 @@ public class Shop extends BasePowerUp {
     protected void onPause(){
         super.onPause();
         //Save all values of upgrades owned
-
-        saveAll(savedBaker, savedBakerOwned, "savedBakerPrice", "savedBakerOwned");
-        saveAll(savedFlourSack, savedFlourSackOwned, "savedFlourSackPrice", "savedFlourSackOwned");
-        saveAll(savedCloner, savedClonerOwned, "savedClonerPrice", "savedClonerOwned");
-        saveAll(savedMine, savedMineOwned, "savedMinePrice", "savedMineOwned");
-        saveAll(savedFactory, savedFactoryOwned, "savedFactoryPrice", "savedFactoryOwned");
-        saveAll(savedShrine, savedShrineOwned, "savedShrinePrice", "savedShrineOwned");
-        saveAll(savedShipment, savedShipmentOwned, "savedShipmentPrice", "savedShipmentOwned");
-        saveAll(savedPortal, savedPortalOwned, "savedPortalPrice", "savedPortalOwned");
-        saveAll(savedTimeMachine, savedTimeMachineOwned, "saveTimeMachinePrice", "savedTimeMachineOwned");
+        saveAll(savedClicker, "savedClicker");
+//        saveAll(savedBaker,  "savedBaker");
+//        saveAll(savedFlourSack, "savedFlourSack");
+//        saveAll(savedCloner, "savedCloner");
+//        saveAll(savedMine, "savedMine");
+//        saveAll(savedFactory,  "savedFactory");
+//        saveAll(savedShrine, "savedShrinePrice");
+//        saveAll(savedShipment, "savedShipmentPrice");
+//        saveAll(savedPortal, "savedPortal");
+//        saveAll(savedTimeMachine, "saveTimeMachine");
     }//End onPause
 
 
@@ -244,7 +296,11 @@ public class Shop extends BasePowerUp {
         donutPerSecondText.setText(output);
     }
 
-
-
+    public void saveAll(SharedPreferences sp, String key){
+//        for(PowerUp p : powerUpArray) {
+//            sp.edit().putString(key, g.toJson(p)).apply();
+//        }
+        sp.edit().putString(key, g.toJson(powerUpArray)).apply();
+    }
 
 }
