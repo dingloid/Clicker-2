@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.upgrades;
+package ohpiestudio.clicker2.Upgrades;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import ohpiestudio.clicker2.R;
 
 public class BasePowerUp extends AppCompatActivity {
 
+
     //Icon Array
     public int powerIcons[] = {
             R.drawable.handico ,
@@ -20,11 +21,10 @@ public class BasePowerUp extends AppCompatActivity {
             R.drawable.clonerico,
             R.drawable.factoryico,
             R.drawable.templeico,
-            //R.drawable.shipmentico,
+            R.drawable.shipmentico,
             R.drawable.portalico,
             R.drawable.timemachineico
     };
-
 
 //              __
 //            <(o )___

@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.upgrades;
+package ohpiestudio.clicker2.Upgrades;
 
 
 public class PowerUp {

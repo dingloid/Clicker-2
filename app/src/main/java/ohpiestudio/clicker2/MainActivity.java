@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ohpiestudio.clicker2.screens.Shop;
+import ohpiestudio.clicker2.Screens.Shop;
 
 public class MainActivity extends AppCompatActivity {
     //Variables
@@ -24,10 +24,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView donutAmountText;
     private TextView donutPerSecondText;
 
+    // power ups
+
     //Other stuff
     private CountDownTimer timer;
-    SharedPreferences savedAmount;
-    SharedPreferences savedDPS;
+    private static final String PREFS_NAME = "DonutClickerPrefs";
     static final int INT_CODE = 1;
 
     @Override
@@ -35,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        //Load Values
-        savedAmount = getPreferences(Context.MODE_PRIVATE);
-        savedDPS = getPreferences(Context.MODE_PRIVATE);
 
-        donutAmount = savedAmount.getLong("donutAmount", donutAmount);
-        donutPerSecond = savedDPS.getLong("donutPerSecond", donutPerSecond);
+        //Load Values from shared preferences
+        SharedPreferences donutDetails = getSharedPreferences(PREFS_NAME ,Context.MODE_PRIVATE);
+        donutAmount = donutDetails.getLong("donutAmount", donutAmount);
+        donutPerSecond = donutDetails.getLong("donutPerSecond", donutPerSecond);
+
     }//End onCreate
 
     @Override
@@ -116,9 +117,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        //Save Values
-        savedAmount.edit().putLong("donutAmount", donutAmount).apply();
-        savedDPS.edit().putLong("donutPerSecond", donutPerSecond).apply();
+
+
+        //Save Values into shared preferences
+        SharedPreferences donutDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor donutDetailsEdit = donutDetails.edit();
+        donutDetailsEdit.putLong("donutAmount", donutAmount).apply();
+        donutDetailsEdit.putLong("donutPerSecond", donutPerSecond).apply();
+
         timer.cancel();
     }//End onPause
 
@@ -150,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setDonutPerSecond(String dps){
         donutPerSecondText.setText(dps);
+    }
+
+    private void setSharedPreferences() {
+
     }
 
 }//End
