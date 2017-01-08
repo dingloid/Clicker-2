@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+
 import ohpiestudio.clicker2.Upgrades.Skins;
 
 public class SkinsAdapter extends BaseAdapter {
