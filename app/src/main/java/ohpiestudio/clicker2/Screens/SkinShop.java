@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.screens;
+package ohpiestudio.clicker2.Screens;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
