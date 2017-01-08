@@ -9,10 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-<<<<<<< HEAD
-=======
+
 import ohpiestudio.clicker2.R;
->>>>>>> 7139365d29f4921b8c7e403f655d97faf36f1528
+
 import ohpiestudio.clicker2.Upgrades.Skins;
 
 
