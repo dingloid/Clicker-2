@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView donutAmountText;
     private TextView donutPerSecondText;
 
-    // power ups
-
     //Other stuff
     private CountDownTimer timer;
     private static final String PREFS_NAME = "DonutClickerPrefs";
@@ -36,12 +34,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
         //Load Values from shared preferences
         SharedPreferences donutDetails = getSharedPreferences(PREFS_NAME ,Context.MODE_PRIVATE);
         donutAmount = donutDetails.getLong("donutAmount", donutAmount);
         donutPerSecond = donutDetails.getLong("donutPerSecond", donutPerSecond);
-
     }//End onCreate
 
     @Override
@@ -117,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-
-
         //Save Values into shared preferences
         SharedPreferences donutDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor donutDetailsEdit = donutDetails.edit();
@@ -156,10 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setDonutPerSecond(String dps){
         donutPerSecondText.setText(dps);
-    }
-
-    private void setSharedPreferences() {
-
     }
 
 }//End

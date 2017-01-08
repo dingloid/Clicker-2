@@ -61,8 +61,8 @@ public class SkinsAdapter extends BaseAdapter {
             title.setText(String.valueOf(skinArray[i].getName()));
             thumbnails.setImageResource(icons[i]);
 
-
             return v;
+
         } else {
             View v = view;
 
@@ -75,7 +75,6 @@ public class SkinsAdapter extends BaseAdapter {
             price.setText(String.valueOf(skinArray[i].getPrice()));
             title.setText(String.valueOf(skinArray[i].getName()));
             thumbnails.setImageResource(icons[i]);
-
 
             return v;
         }
