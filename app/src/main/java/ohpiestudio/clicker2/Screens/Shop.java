@@ -20,7 +20,9 @@ import com.google.gson.Gson;
 import ohpiestudio.clicker2.Adapter.CustomAdapter;
 import ohpiestudio.clicker2.Upgrades.BasePowerUp;
 import ohpiestudio.clicker2.R;
+
 import ohpiestudio.clicker2.Upgrades.PowerUp;
+
 
 
 public class Shop extends BasePowerUp {
@@ -31,9 +33,11 @@ public class Shop extends BasePowerUp {
     //Variables
     private long donutAmount;
     private long donutPerSecond;
+
     Gson gson = new Gson();
     private final String PREFS_NAME = "powerUpDetails";
     private PowerUp powerUpArray[];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +49,14 @@ public class Shop extends BasePowerUp {
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
 
 
+
+
     }//End onCreate
 
     @Override
     protected void onStart(){
         super.onStart();
+        g = new Gson();
 
         //BANNER AD
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-3274964731359118~2273860582");
@@ -68,6 +75,7 @@ public class Shop extends BasePowerUp {
         donutPerSecond = getValue.getLongExtra("donutPerSecond", donutPerSecond);
 
         //Init prefs
+
         SharedPreferences powerUpDetails = getSharedPreferences(PREFS_NAME ,Context.MODE_PRIVATE);
         powerUpArray = gson.fromJson(powerUpDetails.getString("powerUpDetails", ""), PowerUp[].class);
 
@@ -86,6 +94,52 @@ public class Shop extends BasePowerUp {
                 new PowerUp("Time Machine", 10, 0)
             };
         }
+
+        savedClicker = getPreferences(Context.MODE_PRIVATE);
+        savedBaker = getPreferences(Context.MODE_PRIVATE);
+        savedFlourSack = getPreferences(Context.MODE_PRIVATE);
+        savedCloner = getPreferences(Context.MODE_PRIVATE);
+        savedMine = getPreferences(Context.MODE_PRIVATE);
+        savedFactory = getPreferences(Context.MODE_PRIVATE);
+        savedShrine = getPreferences(Context.MODE_PRIVATE);
+        savedShipment = getPreferences(Context.MODE_PRIVATE);
+        savedPortal = getPreferences(Context.MODE_PRIVATE);
+        savedTimeMachine = getPreferences(Context.MODE_PRIVATE);
+
+        String temp = savedClicker.getString("savedClicker", "");
+        powerUpArray = g.fromJson( temp , PowerUp[].class);
+
+        //Declare Objects or something
+
+    if(powerUpArray == null){
+
+        baker = new PowerUp("Baker", 2, 0);
+        flourSack = new PowerUp("Flour Sack", 3, 0);
+        mine = new PowerUp("Mine", 4, 0);
+        cloner = new PowerUp("Cloner", 5, 0);
+        factory = new PowerUp("Factory", 6, 0);
+        shrine = new PowerUp("Shrine", 7, 0);
+        shipment = new PowerUp("Shipment", 8, 0);
+        portal = new PowerUp("Portal", 9, 0);
+        timeMachine = new PowerUp("Time Machine", 10, 0);
+
+        //Power Up Array
+        powerUpArray = new PowerUp[]{
+                clicker,
+                baker,
+                flourSack,
+                mine,
+                cloner,
+                factory,
+                shrine,
+                //shipment,
+                portal,
+                timeMachine
+        };
+    }
+
+
+
 
         //Update Text Fields with donut amount
         setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
@@ -108,7 +162,7 @@ public class Shop extends BasePowerUp {
                             donutAmount = donutAmount - powerUpArray[0].getPrice();
                             donutPerSecond = donutPerSecond + 1;
                             powerUpArray[0].increasePrice();
-                            //saveAll(savedClicker, savedClickerOwned, "savedClickerPrice", "savedClickerOwned");
+                            clicker.increasePrice();
                         }
                         break;
                     }
@@ -220,7 +274,9 @@ public class Shop extends BasePowerUp {
     protected void onPause(){
         super.onPause();
         //Save all values of upgrades owned
+
         saveAll("powerUpDetails");
+
     }//End onPause
 
 
@@ -233,11 +289,14 @@ public class Shop extends BasePowerUp {
         donutPerSecondText.setText(output);
     }
 
+
     private void saveAll(String key) {
         SharedPreferences powerUpDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor powerUpDetailsEdit = powerUpDetails.edit();
         powerUpDetailsEdit.putString(key, gson.toJson(powerUpArray)).apply();
     }
+
+
 
 
 }

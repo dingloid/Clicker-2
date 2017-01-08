@@ -5,9 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+<<<<<<< HEAD
+=======
+import ohpiestudio.clicker2.R;
+>>>>>>> 7139365d29f4921b8c7e403f655d97faf36f1528
 import ohpiestudio.clicker2.Upgrades.Skins;
+
 
 public class SkinsAdapter extends BaseAdapter {
 
@@ -23,7 +30,7 @@ public class SkinsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return icons.length;
     }
 
     @Override
@@ -38,6 +45,40 @@ public class SkinsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        TextView title;
+        TextView price;
+        ImageView thumbnails;
+
+        if(view == null){
+            View v = inflater.inflate(R.layout.list_layout, null);
+
+            //Declare UI
+            title = (TextView) v.findViewById(R.id.powerUpName);
+            thumbnails = (ImageView) v.findViewById(R.id.iconArray);
+            price = (TextView) v.findViewById(R.id.powerUpCost);
+
+            //Populate Text
+            price.setText(String.valueOf(skinArray[i].getPrice()));
+            title.setText(String.valueOf(skinArray[i].getName()));
+            thumbnails.setImageResource(icons[i]);
+
+
+            return v;
+        } else {
+            View v = view;
+
+            //Declare UI
+            title = (TextView) v.findViewById(R.id.powerUpName);
+            thumbnails = (ImageView) v.findViewById(R.id.iconArray);
+            price = (TextView) v.findViewById(R.id.powerUpCost);
+
+            //Populate Text
+            price.setText(String.valueOf(skinArray[i].getPrice()));
+            title.setText(String.valueOf(skinArray[i].getName()));
+            thumbnails.setImageResource(icons[i]);
+
+
+            return v;
+        }
     }
 }

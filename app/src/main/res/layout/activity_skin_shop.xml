@@ -5,7 +5,7 @@
     android:id="@+id/activity_shop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ohpiestudio.clicker2.screens.SkinShop">
+    tools:context="ohpiestudio.clicker2.Screens.SkinShop">
 
     <RelativeLayout
         android:layout_width="match_parent"
