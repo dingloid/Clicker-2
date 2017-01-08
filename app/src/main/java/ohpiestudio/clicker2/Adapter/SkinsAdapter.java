@@ -1,4 +1,4 @@
-package ohpiestudio.clicker2.adapter;
+package ohpiestudio.clicker2.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import ohpiestudio.clicker2.upgrades.Skins;
+import ohpiestudio.clicker2.Upgrades.Skins;
 
 public class SkinsAdapter extends BaseAdapter {
 

@@ -1,7 +1,8 @@
-package ohpiestudio.clicker2.screens;
+package ohpiestudio.clicker2.Screens;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -16,10 +17,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 
 
-import ohpiestudio.clicker2.adapter.CustomAdapter;
-import ohpiestudio.clicker2.upgrades.BasePowerUp;
+import ohpiestudio.clicker2.Adapter.CustomAdapter;
+import ohpiestudio.clicker2.Upgrades.BasePowerUp;
 import ohpiestudio.clicker2.R;
-
+import ohpiestudio.clicker2.Upgrades.PowerUp;
 
 
 public class Shop extends BasePowerUp {
@@ -31,7 +32,8 @@ public class Shop extends BasePowerUp {
     private long donutAmount;
     private long donutPerSecond;
     Gson gson = new Gson();
-
+    private final String PREFS_NAME = "powerUpDetails";
+    private PowerUp powerUpArray[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,28 +68,24 @@ public class Shop extends BasePowerUp {
         donutPerSecond = getValue.getLongExtra("donutPerSecond", donutPerSecond);
 
         //Init prefs
-        savedClicker = getPreferences(Context.MODE_PRIVATE);
-        savedBaker = getPreferences(Context.MODE_PRIVATE);
-        savedFlourSack = getPreferences(Context.MODE_PRIVATE);
-        savedCloner = getPreferences(Context.MODE_PRIVATE);
-        savedMine = getPreferences(Context.MODE_PRIVATE);
-        savedFactory = getPreferences(Context.MODE_PRIVATE);
-        savedShrine = getPreferences(Context.MODE_PRIVATE);
-        savedShipment = getPreferences(Context.MODE_PRIVATE);
-        savedPortal = getPreferences(Context.MODE_PRIVATE);
-        savedTimeMachine = getPreferences(Context.MODE_PRIVATE);
-        savedClickerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedBakerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedFlourSackOwned = getPreferences(Context.MODE_PRIVATE);
-        savedClonerOwned = getPreferences(Context.MODE_PRIVATE);
-        savedMineOwned = getPreferences(Context.MODE_PRIVATE);
-        savedFactoryOwned = getPreferences(Context.MODE_PRIVATE);
-        savedShrineOwned = getPreferences(Context.MODE_PRIVATE);
-        savedShipmentOwned = getPreferences(Context.MODE_PRIVATE);
-        savedPortalOwned = getPreferences(Context.MODE_PRIVATE);
-        savedTimeMachineOwned = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences powerUpDetails = getSharedPreferences(PREFS_NAME ,Context.MODE_PRIVATE);
+        powerUpArray = gson.fromJson(powerUpDetails.getString("powerUpDetails", ""), PowerUp[].class);
 
-
+        // powerUpArray was not initialized from shared preferences, need to initialize it to default details
+        if(powerUpArray == null) {
+            powerUpArray = new PowerUp[] {
+                new PowerUp("Clicker", 1, 0),
+                new PowerUp("Baker", 2, 0),
+                new PowerUp("Flour Sack", 3, 0),
+                new PowerUp("Mine", 4, 0),
+                new PowerUp("Cloner", 5, 0),
+                new PowerUp("Factory", 6, 0),
+                new PowerUp("Shrine", 7, 0),
+                new PowerUp("Shipment", 8, 0),
+                new PowerUp("Portal", 9, 0),
+                new PowerUp("Time Machine", 10, 0)
+            };
+        }
 
         //Update Text Fields with donut amount
         setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
@@ -105,100 +103,100 @@ public class Shop extends BasePowerUp {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l ) {
                 switch (i){
                     case 0:{
-                        if(donutAmount >= clicker.getPrice()) {
-                            clicker.increaseAmountOwned();
-                            donutAmount = donutAmount - clicker.getPrice();
+                        if(donutAmount >= powerUpArray[0].getPrice()) {
+                            powerUpArray[0].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[0].getPrice();
                             donutPerSecond = donutPerSecond + 1;
-                            clicker.increasePrice();
-                            saveAll(savedClicker, savedClickerOwned, "savedClickerPrice", "savedClickerOwned");
+                            powerUpArray[0].increasePrice();
+                            //saveAll(savedClicker, savedClickerOwned, "savedClickerPrice", "savedClickerOwned");
                         }
                         break;
                     }
                     case 1:{
-                        if(donutAmount >= baker.getPrice()) {
-                            baker.increaseAmountOwned();
-                            donutAmount = donutAmount - baker.getPrice();
+                        if(donutAmount >= powerUpArray[1].getPrice()) {
+                            powerUpArray[1].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[1].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            baker.increasePrice();
+                            powerUpArray[1].increasePrice();
                         }
                         break;
                     }
                     case 2:{
-                        if(donutAmount >= flourSack.getPrice()) {
-                            flourSack.increaseAmountOwned();
-                            donutAmount = donutAmount - flourSack.getPrice();
+                        if(donutAmount >= powerUpArray[2].getPrice()) {
+                            powerUpArray[2].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[2].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            flourSack.increasePrice();
+                            powerUpArray[2].increasePrice();
                         }
                         break;
                     }
                     case 3:{
-                        if(donutAmount >= mine.getPrice()) {
-                            mine.increaseAmountOwned();
-                            donutAmount = donutAmount - mine.getPrice();
+                        if(donutAmount >= powerUpArray[3].getPrice()) {
+                            powerUpArray[3].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[3].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            mine.increasePrice();
+                            powerUpArray[3].increasePrice();
                         }
                         break;
                     }
                     case 4:{
-                        if(donutAmount >= cloner.getPrice()) {
-                            cloner.increaseAmountOwned();
-                            donutAmount = donutAmount - cloner.getPrice();
+                        if(donutAmount >= powerUpArray[4].getPrice()) {
+                            powerUpArray[4].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[4].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            cloner.increasePrice();
+                            powerUpArray[4].increasePrice();
                         }
                         break;
                     }
                     case 5:{
-                        if(donutAmount >= factory.getPrice()) {
-                            factory.increaseAmountOwned();
-                            donutAmount = donutAmount - factory.getPrice();
+                        if(donutAmount >= powerUpArray[5].getPrice()) {
+                            powerUpArray[5].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[5].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            factory.increasePrice();
+                            powerUpArray[5].increasePrice();
                         }
                         break;
                     }
                     case 6:{
-                        if(donutAmount >= shrine.getPrice()) {
-                            shrine.increaseAmountOwned();
-                            donutAmount = donutAmount - shrine.getPrice();
+                        if(donutAmount >= powerUpArray[6].getPrice()) {
+                            powerUpArray[6].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[6].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            shrine.increasePrice();
+                            powerUpArray[6].increasePrice();
                         }
                         break;
                     }
                     case 7:{
-                        if(donutAmount >= shipment.getPrice()) {
-                            shipment.increaseAmountOwned();
-
-                            donutAmount = donutAmount - shipment.getPrice();
+                        if(donutAmount >= powerUpArray[7].getPrice()) {
+                            powerUpArray[7].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[7].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            shipment.increasePrice();
+                            powerUpArray[7].increasePrice();
                         }
                         break;
                     }
                     case 8:{
-                        if(donutAmount >= portal.getPrice()) {
-                            portal.increaseAmountOwned();
-                            donutAmount = donutAmount - portal.getPrice();
+                        if(donutAmount >= powerUpArray[8].getPrice()) {
+                            powerUpArray[8].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[8].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            portal.increasePrice();
+                            powerUpArray[8].increasePrice();
                         }
                         break;
                     }
                     case 9:{
-                        if(donutAmount >= timeMachine.getPrice()) {
-                            timeMachine.increaseAmountOwned();
-                            donutAmount = donutAmount - timeMachine.getPrice();
+                        if(donutAmount >= powerUpArray[9].getPrice()) {
+                            powerUpArray[9].increaseAmountOwned();
+                            donutAmount = donutAmount - powerUpArray[9].getPrice();
                             donutPerSecond = donutPerSecond + 4;
-                            timeMachine.increasePrice();
+                            powerUpArray[9].increasePrice();
                         }
                         break;
                     }
                     default:
                         break;
                 }
+                saveAll("powerUpDetails");
                 setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
                 setDonutPerSecondText(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
                 customAdapter.notifyDataSetChanged();
@@ -222,16 +220,7 @@ public class Shop extends BasePowerUp {
     protected void onPause(){
         super.onPause();
         //Save all values of upgrades owned
-
-        saveAll(savedBaker, savedBakerOwned, "savedBakerPrice", "savedBakerOwned");
-        saveAll(savedFlourSack, savedFlourSackOwned, "savedFlourSackPrice", "savedFlourSackOwned");
-        saveAll(savedCloner, savedClonerOwned, "savedClonerPrice", "savedClonerOwned");
-        saveAll(savedMine, savedMineOwned, "savedMinePrice", "savedMineOwned");
-        saveAll(savedFactory, savedFactoryOwned, "savedFactoryPrice", "savedFactoryOwned");
-        saveAll(savedShrine, savedShrineOwned, "savedShrinePrice", "savedShrineOwned");
-        saveAll(savedShipment, savedShipmentOwned, "savedShipmentPrice", "savedShipmentOwned");
-        saveAll(savedPortal, savedPortalOwned, "savedPortalPrice", "savedPortalOwned");
-        saveAll(savedTimeMachine, savedTimeMachineOwned, "saveTimeMachinePrice", "savedTimeMachineOwned");
+        saveAll("powerUpDetails");
     }//End onPause
 
 
@@ -244,7 +233,11 @@ public class Shop extends BasePowerUp {
         donutPerSecondText.setText(output);
     }
 
-
+    private void saveAll(String key) {
+        SharedPreferences powerUpDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor powerUpDetailsEdit = powerUpDetails.edit();
+        powerUpDetailsEdit.putString(key, gson.toJson(powerUpArray)).apply();
+    }
 
 
 }
