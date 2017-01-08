@@ -8,6 +8,8 @@ import ohpiestudio.clicker2.R;
 
 public class SkinShop extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
