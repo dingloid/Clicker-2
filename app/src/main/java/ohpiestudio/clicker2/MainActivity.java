@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ohpiestudio.clicker2.Screens.Shop;
@@ -28,8 +27,11 @@ public class MainActivity extends AppCompatActivity {
     //Other stuff
     private CountDownTimer timer;
     private static final String PREFS_NAME = "DonutClickerPrefs";
+    private static final String SKIN_NAME = "savedSkin";
     static final int SHOP_CODE = 1;
     static final int SKIN_SHOP_CODE = 2;
+
+    SkinShop.skinType selectedSkin;
 
     private ImageView donut;
 
@@ -38,16 +40,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        donut = (ImageView) findViewById(R.id.donut);
         //Load Values from shared preferences
         SharedPreferences donutDetails = getSharedPreferences(PREFS_NAME ,Context.MODE_PRIVATE);
         donutAmount = donutDetails.getLong("donutAmount", donutAmount);
         donutPerSecond = donutDetails.getLong("donutPerSecond", donutPerSecond);
+
+        SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
+        int temp = skinDetails.getInt(SKIN_NAME,0 );
+        selectedSkin = SkinShop.skinType.fromInt(temp);
+        setDonutImage(selectedSkin);
     }//End onCreate
 
     @Override
     protected void onStart(){
         super.onStart();
-        donut = (ImageView) findViewById(R.id.donut);
+
         donutAmountText = (TextView) findViewById(R.id.donutAmountText);
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
         ImageView toShop = (ImageView) findViewById(R.id.toShop);
@@ -135,14 +144,18 @@ public class MainActivity extends AppCompatActivity {
         donutDetailsEdit.putLong("donutAmount", donutAmount).apply();
         donutDetailsEdit.putLong("donutPerSecond", donutPerSecond).apply();
 
+        SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
+        skinDetailsEdit.putInt(SKIN_NAME,selectedSkin.getValue()).apply();
+
         timer.cancel();
     }//End onPause
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == SHOP_CODE){
-            if(resultCode == RESULT_OK){
+        if (requestCode == SHOP_CODE) {
+            if (resultCode == RESULT_OK) {
                 donutAmount = data.getLongExtra("updateDonutAmount", 0);
                 donutPerSecond = data.getLongExtra("updateDonutPerSecond", 0);
                 setDonutAmount(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
@@ -150,21 +163,11 @@ public class MainActivity extends AppCompatActivity {
                 //Restart Donut per second
                 timer.start();
             }
-        } else if(requestCode == SKIN_SHOP_CODE){
-            if(resultCode == RESULT_OK){
-                SkinShop.skinType selectedSkin = (SkinShop.skinType) data.getSerializableExtra("skinSelected");
-                switch(selectedSkin){
-                    case DEFAULT:{
-                        donut.setImageResource(R.drawable.donut);
-                        break;
-                    }
-                    case PINK_DONUT:{
-                        donut.setImageResource(R.drawable.pinkdonut);
-                        break;
-                    }
-                    default:
-                        break;
-                }
+        } else if (requestCode == SKIN_SHOP_CODE) {
+            if (resultCode == RESULT_OK) {
+                selectedSkin = (SkinShop.skinType) data.getSerializableExtra("skinSelected");
+                setDonutImage(selectedSkin);
+                timer.start();
             }
         }
     }
@@ -172,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop(){
         super.onStop();
+        SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
+        skinDetailsEdit.putInt(SKIN_NAME,selectedSkin.getValue()).apply();
         timer.cancel();
     }//End onStop
 
@@ -183,5 +189,18 @@ public class MainActivity extends AppCompatActivity {
         donutPerSecondText.setText(dps);
     }
 
-
+    public void setDonutImage(SkinShop.skinType s){
+        switch(s){
+            case DEFAULT:{
+                donut.setImageResource(R.drawable.donut);
+                break;
+            }
+            case PINK_DONUT:{
+                donut.setImageResource(R.drawable.pinkdonut);
+                break;
+            }
+            default:
+                break;
+        }
+    }
 }//End

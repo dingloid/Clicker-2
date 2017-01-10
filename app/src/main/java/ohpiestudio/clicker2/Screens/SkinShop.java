@@ -32,7 +32,31 @@ public class SkinShop extends AppCompatActivity {
     private long donutPerSecond;
     private Skins skinArray[];
 
-    public enum skinType {DEFAULT , PINK_DONUT, COOKIE }
+    public enum skinType {DEFAULT(0) , PINK_DONUT(1), COOKIE(2);
+        private final int i;
+        skinType(int i) {
+            this.i = i;
+        }
+
+        public int getValue(){
+            return i;
+        }
+
+        public static skinType fromInt(int i){
+            switch (i){
+                case 0:{
+                    return DEFAULT;
+                }
+                case 1: {
+                    return PINK_DONUT;
+                }
+                case 3:{
+                    return COOKIE;
+                }
+            }
+            return null;
+        }
+    }
 
     private skinType selectedSkin = skinType.DEFAULT;
 
