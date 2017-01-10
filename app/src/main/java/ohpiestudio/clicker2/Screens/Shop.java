@@ -242,11 +242,13 @@ public class Shop extends AppCompatActivity {
         donutPerSecondText.setText(output);
     }
 
-    private void saveAll(String key) {
+    public void saveAll(String key) {
         SharedPreferences powerUpDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor powerUpDetailsEdit = powerUpDetails.edit();
         powerUpDetailsEdit.putString(key, gson.toJson(powerUpArray)).apply();
     }
+
+
 
     //              __
     //            <(o )___

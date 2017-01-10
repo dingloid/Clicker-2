@@ -28,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
     //Other stuff
     private CountDownTimer timer;
     private static final String PREFS_NAME = "DonutClickerPrefs";
-    static final int INT_CODE = 1;
+    static final int SHOP_CODE = 1;
+    static final int SKIN_SHOP_CODE = 2;
+
+    private ImageView donut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        final ImageView donut = (ImageView) findViewById(R.id.donut);
+        donut = (ImageView) findViewById(R.id.donut);
         donutAmountText = (TextView) findViewById(R.id.donutAmountText);
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
         ImageView toShop = (ImageView) findViewById(R.id.toShop);
@@ -116,8 +119,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), SkinShop.class);
                 i.putExtra("donutAmount", donutAmount);
+                i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
-                startActivityForResult(i, 1);
+                startActivityForResult(i, 2);
             }
         });
     }//End onStart
@@ -137,15 +141,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == INT_CODE){
+        if(requestCode == SHOP_CODE){
             if(resultCode == RESULT_OK){
                 donutAmount = data.getLongExtra("updateDonutAmount", 0);
                 donutPerSecond = data.getLongExtra("updateDonutPerSecond", 0);
-
                 setDonutAmount(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
                 setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
                 //Restart Donut per second
                 timer.start();
+            }
+        } else if(requestCode == SKIN_SHOP_CODE){
+            if(resultCode == RESULT_OK){
+                SkinShop.skinType selectedSkin = (SkinShop.skinType) data.getSerializableExtra("skinSelected");
+                switch(selectedSkin){
+                    case DEFAULT:{
+                        donut.setImageResource(R.drawable.donut);
+                        break;
+                    }
+                    case PINK_DONUT:{
+                        donut.setImageResource(R.drawable.pinkdonut);
+                        break;
+                    }
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -163,5 +182,6 @@ public class MainActivity extends AppCompatActivity {
     public void setDonutPerSecond(String dps){
         donutPerSecondText.setText(dps);
     }
+
 
 }//End

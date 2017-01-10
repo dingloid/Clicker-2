@@ -29,8 +29,12 @@ public class SkinShop extends AppCompatActivity {
 
     Gson gson = new Gson();
     private long donutAmount;
+    private long donutPerSecond;
     private Skins skinArray[];
 
+    public enum skinType {DEFAULT , PINK_DONUT, COOKIE }
+
+    private skinType selectedSkin = skinType.DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,9 @@ public class SkinShop extends AppCompatActivity {
 
         Intent getValue = this.getIntent();
         donutAmount = getValue.getLongExtra("donutAmount", donutAmount);
-        setDonutAmountText(String.valueOf(donutAmount));
+        donutPerSecond = getValue.getLongExtra("donutPerSecond", donutPerSecond);
+
+        setDonutAmountText(String.valueOf(donutAmount + " " + getString(R.string.donuts)));
 
         int skinIcons[] = {
                 R.drawable.defaultdonutico,
@@ -65,13 +71,13 @@ public class SkinShop extends AppCompatActivity {
                 R.drawable.cookieico
         };
 
-        SharedPreferences skinDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        //
+        final SharedPreferences skinDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        skinArray = gson.fromJson(skinDetails.getString("skinDetails", ""), Skins[].class);
         if(skinArray == null){
             skinArray = new Skins[] {
                     new Skins("Donut", 0, "Default Skin", true),
-                    new Skins("Pink Donut", 1000000, "", false),
-                    new Skins("Cookie", 10000000, "The original clciker", false)
+                    new Skins("Pink Donut", 100, "", false),
+                    new Skins("Cookie", 10000000, "The original clicker", false)
             };
         }
 
@@ -85,7 +91,28 @@ public class SkinShop extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                switch(i){
+                    case 0: {
+                        selectedSkin = skinType.DEFAULT;
+                        break;
+                    }
+                    case 1: {
+                        if(!skinArray[i].getUnlocked()){
+                            if(donutAmount >= skinArray[i].getPrice()) {
+                                donutAmount = donutAmount - skinArray[i].getPrice();
+                                skinArray[i].setUnlocked(true);
+                            }
+                        }
+                        if(skinArray[i].getUnlocked()){
+                            selectedSkin = skinType.PINK_DONUT;
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                saveAll("skinDetails");
+                setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
             }
         });
     }//End onStart
@@ -94,18 +121,27 @@ public class SkinShop extends AppCompatActivity {
     public void onBackPressed(){
         Intent sendValues = new Intent();
         sendValues.putExtra("updateDonutAmount", donutAmount);
+        sendValues.putExtra("updateDonutPerSecond", donutPerSecond);
+        sendValues.putExtra("skinSelected", selectedSkin );
         setResult(RESULT_OK, sendValues);
-        finishActivity(1);
+        finishActivity(2);
         super.onBackPressed();
     }//End onBackPressed
 
     @Override
     protected void onPause(){
+        saveAll("skinDetails");
         super.onPause();
     }//End onPause
 
     public void setDonutAmountText(String output){
         donutAmountText.setText(output);
+    }
+
+    public void saveAll(String key) {
+        SharedPreferences skinDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
+        skinDetailsEdit.putString(key, gson.toJson(skinArray)).apply();
     }
 }//End
 

@@ -27,4 +27,8 @@ public class Skins extends PowerUp{
     public void setUnlocked(boolean t){
         isUnlocked = t;
     }
+
+    public boolean getUnlocked(){
+        return isUnlocked;
+    }
 }
