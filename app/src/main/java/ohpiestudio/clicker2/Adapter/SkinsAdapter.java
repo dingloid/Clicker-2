@@ -8,8 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-
 import ohpiestudio.clicker2.R;
 
 import ohpiestudio.clicker2.Upgrades.Skins;
@@ -46,19 +44,22 @@ public class SkinsAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         TextView title;
         TextView price;
+        TextView desc;
         ImageView thumbnails;
 
         if(view == null){
-            View v = inflater.inflate(R.layout.list_layout, null);
+            View v = inflater.inflate(R.layout.list_layout_skins, null);
 
             //Declare UI
-            title = (TextView) v.findViewById(R.id.powerUpName);
+            title = (TextView) v.findViewById(R.id.skinName);
             thumbnails = (ImageView) v.findViewById(R.id.iconArray);
-            price = (TextView) v.findViewById(R.id.powerUpCost);
+            price = (TextView) v.findViewById(R.id.skinCost);
+            desc = (TextView) v.findViewById(R.id.descText);
 
             //Populate Text
             price.setText(String.valueOf(skinArray[i].getPrice()));
             title.setText(String.valueOf(skinArray[i].getName()));
+            desc.setText(skinArray[i].getDescription());
             thumbnails.setImageResource(icons[i]);
 
             return v;
@@ -67,13 +68,15 @@ public class SkinsAdapter extends BaseAdapter {
             View v = view;
 
             //Declare UI
-            title = (TextView) v.findViewById(R.id.powerUpName);
+            title = (TextView) v.findViewById(R.id.skinName);
             thumbnails = (ImageView) v.findViewById(R.id.iconArray);
-            price = (TextView) v.findViewById(R.id.powerUpCost);
+            price = (TextView) v.findViewById(R.id.skinCost);
+            desc = (TextView) v.findViewById(R.id.descText);
 
             //Populate Text
             price.setText(String.valueOf(skinArray[i].getPrice()));
             title.setText(String.valueOf(skinArray[i].getName()));
+            desc.setText(skinArray[i].getDescription());
             thumbnails.setImageResource(icons[i]);
 
             return v;

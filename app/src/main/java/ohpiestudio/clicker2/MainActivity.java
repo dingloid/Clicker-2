@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ohpiestudio.clicker2.Screens.Shop;
+import ohpiestudio.clicker2.Screens.SkinShop;
 
 public class MainActivity extends AppCompatActivity {
     //Variables
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         final ImageView donut = (ImageView) findViewById(R.id.donut);
         donutAmountText = (TextView) findViewById(R.id.donutAmountText);
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
-        Button toShop = (Button) findViewById(R.id.button);
+        ImageView toShop = (ImageView) findViewById(R.id.toShop);
+        ImageView toSkinShop = (ImageView) findViewById(R.id.toSkinShop);
 
         //Load Values
         setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
@@ -104,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), Shop.class);
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
+                timer.cancel();
+                startActivityForResult(i, 1);
+            }
+        });
+
+        toSkinShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), SkinShop.class);
+                i.putExtra("donutAmount", donutAmount);
                 timer.cancel();
                 startActivityForResult(i, 1);
             }
