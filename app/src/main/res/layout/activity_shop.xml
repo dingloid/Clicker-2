@@ -5,6 +5,7 @@
     android:id="@+id/activity_shop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     tools:context="ohpiestudio.clicker2.Screens.Shop">
 
     <RelativeLayout
@@ -38,15 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/donutAmountText" />
+        android:id="@+id/donutAmountText"
+        android:layout_marginTop="25dp"
+        android:textColor="#ffffff"/>
 
     <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/donutAmountText"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/donutPerSecondText" />
+        android:id="@+id/donutPerSecondText"
+        android:textColor="#ffffff"/>
 
 </RelativeLayout>
