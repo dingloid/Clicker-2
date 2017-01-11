@@ -5,4 +5,6 @@
     <string name="banner">ca-app-pub-3274964731359118/3750593785</string>
     <string name="amount_owned">Owned: </string>
     <string name="price">Cost</string>
+    <string name="unlock">Unlock</string>
+    <string name="selected">Selected</string>
 </resources>

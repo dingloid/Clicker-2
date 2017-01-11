@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ohpiestudio.clicker2.R;
 
@@ -18,6 +20,7 @@ public class SkinsAdapter extends BaseAdapter {
     private int icons[];
     private Skins skinArray[];
     private static LayoutInflater inflater;
+
 
     public SkinsAdapter(Context context, int images[], Skins array[]){
         icons = images;
@@ -41,7 +44,7 @@ public class SkinsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         TextView title;
         TextView price;
         TextView desc;
@@ -57,10 +60,15 @@ public class SkinsAdapter extends BaseAdapter {
             desc = (TextView) v.findViewById(R.id.descText);
 
             //Populate Text
-            price.setText(String.valueOf(skinArray[i].getPrice()));
             title.setText(String.valueOf(skinArray[i].getName()));
             desc.setText(skinArray[i].getDescription());
             thumbnails.setImageResource(icons[i]);
+
+            if(skinArray[i].getUnlocked()){
+                price.setVisibility(View.GONE);
+            } else {
+                price.setText(String.valueOf(skinArray[i].getPrice()));
+            }
 
             return v;
 
@@ -74,10 +82,15 @@ public class SkinsAdapter extends BaseAdapter {
             desc = (TextView) v.findViewById(R.id.descText);
 
             //Populate Text
-            price.setText(String.valueOf(skinArray[i].getPrice()));
             title.setText(String.valueOf(skinArray[i].getName()));
             desc.setText(skinArray[i].getDescription());
             thumbnails.setImageResource(icons[i]);
+
+            if(skinArray[i].getUnlocked()){
+                price.setVisibility(View.GONE);;
+            } else {
+                price.setText(String.valueOf(skinArray[i].getPrice()));
+            }
 
             return v;
         }

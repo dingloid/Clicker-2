@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import ohpiestudio.clicker2.Screens.Shop;
 import ohpiestudio.clicker2.Screens.SkinShop;
+import ohpiestudio.clicker2.Upgrades.Skins;
 
 public class MainActivity extends AppCompatActivity {
     //Variables
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     static final int SHOP_CODE = 1;
     static final int SKIN_SHOP_CODE = 2;
 
-    SkinShop.skinType selectedSkin;
+    Skins.skinType selectedSkin;
 
     private ImageView donut;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
         int temp = skinDetails.getInt(SKIN_NAME,0 );
-        selectedSkin = SkinShop.skinType.fromInt(temp);
+        selectedSkin = Skins.skinType.fromInt(temp);
         setDonutImage(selectedSkin);
     }//End onCreate
 
@@ -144,9 +145,9 @@ public class MainActivity extends AppCompatActivity {
         donutDetailsEdit.putLong("donutAmount", donutAmount).apply();
         donutDetailsEdit.putLong("donutPerSecond", donutPerSecond).apply();
 
-        SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
-        skinDetailsEdit.putInt(SKIN_NAME,selectedSkin.getValue()).apply();
+//        SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
+//        skinDetailsEdit.putInt(SKIN_NAME,selectedSkin.getValue()).apply();
 
         timer.cancel();
     }//End onPause
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (requestCode == SKIN_SHOP_CODE) {
             if (resultCode == RESULT_OK) {
-                selectedSkin = (SkinShop.skinType) data.getSerializableExtra("skinSelected");
+                selectedSkin = (Skins.skinType) data.getSerializableExtra("skinSelected");
                 setDonutImage(selectedSkin);
                 timer.start();
             }
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         donutPerSecondText.setText(dps);
     }
 
-    public void setDonutImage(SkinShop.skinType s){
+    public void setDonutImage(Skins.skinType s){
         switch(s){
             case DEFAULT:{
                 donut.setImageResource(R.drawable.donut);
@@ -197,6 +198,10 @@ public class MainActivity extends AppCompatActivity {
             }
             case PINK_DONUT:{
                 donut.setImageResource(R.drawable.pinkdonut);
+                break;
+            }
+            case COOKIE:{
+                donut.setImageResource(R.drawable.cookie);
                 break;
             }
             default:

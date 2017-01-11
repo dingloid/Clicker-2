@@ -59,7 +59,6 @@
         android:id="@+id/toSkinShop"
         android:src="@drawable/skinshopico"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/toShop"
-        android:layout_marginEnd="35dp" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

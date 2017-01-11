@@ -3,6 +3,7 @@ package ohpiestudio.clicker2.Screens;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -32,33 +34,8 @@ public class SkinShop extends AppCompatActivity {
     private long donutPerSecond;
     private Skins skinArray[];
 
-    public enum skinType {DEFAULT(0) , PINK_DONUT(1), COOKIE(2);
-        private final int i;
-        skinType(int i) {
-            this.i = i;
-        }
 
-        public int getValue(){
-            return i;
-        }
-
-        public static skinType fromInt(int i){
-            switch (i){
-                case 0:{
-                    return DEFAULT;
-                }
-                case 1: {
-                    return PINK_DONUT;
-                }
-                case 3:{
-                    return COOKIE;
-                }
-            }
-            return null;
-        }
-    }
-
-    private skinType selectedSkin = skinType.DEFAULT;
+    private Skins.skinType selectedSkin = Skins.skinType.DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +76,9 @@ public class SkinShop extends AppCompatActivity {
         skinArray = gson.fromJson(skinDetails.getString("skinDetails", ""), Skins[].class);
         if(skinArray == null){
             skinArray = new Skins[] {
-                    new Skins("Donut", 0, "Default Skin", true),
-                    new Skins("Pink Donut", 100, "", false),
-                    new Skins("Cookie", 10000000, "The original clicker", false)
+                    new Skins("Donut", 0, "Default Skin", true, Skins.skinType.DEFAULT),
+                    new Skins("Pink Donut", 100, "", false, Skins.skinType.PINK_DONUT),
+                    new Skins("Cookie", 10000000, "The original clicker", false, Skins.skinType.COOKIE)
             };
         }
 
@@ -117,7 +94,8 @@ public class SkinShop extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch(i){
                     case 0: {
-                        selectedSkin = skinType.DEFAULT;
+                        selectedSkin = skinArray[i].getSkin();
+                        showToast();
                         break;
                     }
                     case 1: {
@@ -128,7 +106,8 @@ public class SkinShop extends AppCompatActivity {
                             }
                         }
                         if(skinArray[i].getUnlocked()){
-                            selectedSkin = skinType.PINK_DONUT;
+                            selectedSkin = skinArray[i].getSkin();
+                            showToast();
                         }
                         break;
                     }
@@ -166,6 +145,19 @@ public class SkinShop extends AppCompatActivity {
         SharedPreferences skinDetails = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor skinDetailsEdit = skinDetails.edit();
         skinDetailsEdit.putString(key, gson.toJson(skinArray)).apply();
+    }
+
+    public void showToast(){
+        final Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.selected), Toast.LENGTH_SHORT);
+        toast.show();
+        Handler handle = new Handler();
+
+        handle.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast.cancel();
+            }
+        }, 500);
     }
 }//End
 
