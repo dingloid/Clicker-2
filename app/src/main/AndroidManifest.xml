@@ -38,7 +38,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Screens.MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +46,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Screens.Shop" />
-        <activity android:name=".Screens.SkinShop"></activity>
+        <activity android:name=".Screens.SkinShop" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

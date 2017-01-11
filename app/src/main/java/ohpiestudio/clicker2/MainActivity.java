@@ -7,11 +7,16 @@ import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.plattysoft.leonids.ParticleSystem;
+
 import ohpiestudio.clicker2.Screens.Shop;
 import ohpiestudio.clicker2.Screens.SkinShop;
 import ohpiestudio.clicker2.Upgrades.Skins;
@@ -27,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Other stuff
     private CountDownTimer timer;
+    private CountDownTimer rain;
+    private String rainType = "R.drawable.defaultdonutico";
     private static final String PREFS_NAME = "DonutClickerPrefs";
     private static final String SKIN_NAME = "savedSkin";
     static final int SHOP_CODE = 1;
@@ -52,6 +59,28 @@ public class MainActivity extends AppCompatActivity {
         int temp = skinDetails.getInt(SKIN_NAME,0 );
         selectedSkin = Skins.skinType.fromInt(temp);
         setDonutImage(selectedSkin);
+
+        rain = new CountDownTimer(1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+            @Override
+            public void onFinish() {
+                try{
+                    startLoop();
+                }catch(Exception e){
+                    Log.e("Error", "Error: " + e.toString());
+                }
+            }
+            private void startLoop() {
+                new ParticleSystem(MainActivity.this, 6, R.drawable.defaultdonutico, 3000, R.id.bg_hook)
+                        .setSpeedByComponentsRange(0f, 0f, 0.09f, 0.15f)
+                        .setAcceleration(0.000018f, 90)
+                        .setFadeOut(2500, new AccelerateInterpolator())
+                        .emitWithGravity(findViewById(R.id.emitter), Gravity.BOTTOM, 4);
+            }
+        };
+
     }//End onCreate
 
     @Override
@@ -85,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
+        rain.start();
         //Click Event for Donut Image
         donut.setOnTouchListener(new View.OnTouchListener(){
             @Override
@@ -120,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
+                rain.cancel();
                 startActivityForResult(i, 1);
             }
         });
@@ -131,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
+                rain.cancel();
                 startActivityForResult(i, 2);
             }
         });
@@ -208,4 +240,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }//End
