@@ -77,8 +77,8 @@ public class SkinShop extends AppCompatActivity {
         if(skinArray == null){
             skinArray = new Skins[] {
                     new Skins("Donut", 0, "Default Skin", true, Skins.skinType.DEFAULT),
-                    new Skins("Pink Donut", 100, "", false, Skins.skinType.PINK_DONUT),
-                    new Skins("Cookie", 10000000, "The original clicker", false, Skins.skinType.COOKIE)
+                    new Skins("Pink Donut", 100, "Donuts famous from Springfield", false, Skins.skinType.PINK_DONUT),
+                    new Skins("Cookie", 10, "The original clicker", false, Skins.skinType.COOKIE)
             };
         }
 
@@ -111,10 +111,24 @@ public class SkinShop extends AppCompatActivity {
                         }
                         break;
                     }
+                    case 2:{
+                        if(!skinArray[i].getUnlocked()){
+                            if(donutAmount >= skinArray[i].getPrice()) {
+                                donutAmount = donutAmount - skinArray[i].getPrice();
+                                skinArray[i].setUnlocked(true);
+                            }
+                        }
+                        if(skinArray[i].getUnlocked()){
+                            selectedSkin = skinArray[i].getSkin();
+                            showToast();
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
                 saveAll("skinDetails");
+                skinsAdapter.notifyDataSetChanged();
                 setDonutAmountText(String.valueOf(donutAmount) + " " + getString(R.string.donuts));
             }
         });

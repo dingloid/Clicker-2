@@ -15,6 +15,9 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.plattysoft.leonids.ParticleSystem;
 
 import ohpiestudio.clicker2.Screens.Shop;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SKIN_NAME = "savedSkin";
     static final int SHOP_CODE = 1;
     static final int SKIN_SHOP_CODE = 2;
+    private ParticleSystem particles;
 
     Skins.skinType selectedSkin;
 
@@ -56,30 +60,11 @@ public class MainActivity extends AppCompatActivity {
         donutPerSecond = donutDetails.getLong("donutPerSecond", donutPerSecond);
 
         SharedPreferences skinDetails = getSharedPreferences(SKIN_NAME, Context.MODE_PRIVATE);
-        int temp = skinDetails.getInt(SKIN_NAME,0 );
+        int temp = skinDetails.getInt(SKIN_NAME, 0);
         selectedSkin = Skins.skinType.fromInt(temp);
         setDonutImage(selectedSkin);
+        particles =  new ParticleSystem(MainActivity.this, 6, getSkin(selectedSkin), 3000, R.id.bg_hook);
 
-        rain = new CountDownTimer(1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-            @Override
-            public void onFinish() {
-                try{
-                    startLoop();
-                }catch(Exception e){
-                    Log.e("Error", "Error: " + e.toString());
-                }
-            }
-            private void startLoop() {
-                new ParticleSystem(MainActivity.this, 6, R.drawable.defaultdonutico, 3000, R.id.bg_hook)
-                        .setSpeedByComponentsRange(0f, 0f, 0.09f, 0.15f)
-                        .setAcceleration(0.000018f, 90)
-                        .setFadeOut(2500, new AccelerateInterpolator())
-                        .emitWithGravity(findViewById(R.id.emitter), Gravity.BOTTOM, 4);
-            }
-        };
 
     }//End onCreate
 
@@ -91,6 +76,37 @@ public class MainActivity extends AppCompatActivity {
         donutPerSecondText = (TextView) findViewById(R.id.donutPerSecondText);
         ImageView toShop = (ImageView) findViewById(R.id.toShop);
         ImageView toSkinShop = (ImageView) findViewById(R.id.toSkinShop);
+
+
+        //BANNER AD
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3274964731359118~2273860582");
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                .addTestDevice("5A123D239B16B42078ABB18A091B4B57")  // An example device ID
+                .build();
+//        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(request);
+
+        //Init Donut Particle Effect
+        rain = new CountDownTimer(1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+            @Override
+            public void onFinish() {
+                try {
+                    particles.setSpeedByComponentsRange(0f, 0f, 0.09f, 0.15f)
+                            .setAcceleration(0.000018f, 90)
+                            .setFadeOut(2500, new AccelerateInterpolator())
+                            .emitWithGravity(findViewById(R.id.emitter), Gravity.BOTTOM, 4);
+                } catch(Exception e){
+                    Log.e("Error", "Error: " + e.toString());
+                }
+            }
+        };
+        rain.start();
 
         //Load Values
         setDonutPerSecond(String.valueOf(donutPerSecond) + " " + getString(R.string.dps));
@@ -114,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
-        rain.start();
+
         //Click Event for Donut Image
         donut.setOnTouchListener(new View.OnTouchListener(){
             @Override
@@ -150,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
+                particles.cancel();
                 rain.cancel();
                 startActivityForResult(i, 1);
             }
@@ -162,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("donutAmount", donutAmount);
                 i.putExtra("donutPerSecond", donutPerSecond);
                 timer.cancel();
+                particles.cancel();
                 rain.cancel();
                 startActivityForResult(i, 2);
             }
@@ -200,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 selectedSkin = (Skins.skinType) data.getSerializableExtra("skinSelected");
                 setDonutImage(selectedSkin);
+//                particles = null;
+                particles =  new ParticleSystem(MainActivity.this, 6, getSkin(selectedSkin), 3000, R.id.bg_hook);
                 timer.start();
             }
         }
@@ -239,6 +259,29 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    //Make particles match skin
+    private int getSkin(Skins.skinType skin){
+        int i;
+        switch (skin){
+            case DEFAULT:{
+                i = R.drawable.defaultdonutico;
+                break;
+            }
+            case PINK_DONUT:{
+                i = R.drawable.pinkdonutico;
+                break;
+            }
+            case COOKIE:{
+                i = R.drawable.cookieico;
+                break;
+            }
+            default:
+                i = R.drawable.defaultdonutico;
+                break;
+        }
+        return i;
     }
 
 }//End
